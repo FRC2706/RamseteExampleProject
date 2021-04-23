@@ -4,9 +4,6 @@
 
 package frc.robot.commands.ramsete;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.config.Config;
@@ -20,12 +17,11 @@ public class RamseteCommandMerge extends RamseteCommand {
      * Construct a RamseteCommandMerge to use RamseteCommand to drive a given trajectory
      * 
      * @param trajectory Path to follow.
-     * @param driveBase DriveSubsystem to get odometry data and pass back velocities.
      * @param loggingDataFileName A logging data file will be created on a usb drive mounted on
      *                            the RoboRio. Give it a good name to know what path it recorded.
      */
-    public RamseteCommandMerge(Trajectory trajectory, DriveBase driveBase, String loggingDataFileName) { 
-        this(trajectory, driveBase, new RamseteControllerLogging(loggingDataFileName));
+    public RamseteCommandMerge(Trajectory trajectory, String loggingDataFileName) { 
+        this(trajectory, DriveBase.getInstance(), new RamseteControllerLogging(loggingDataFileName));
     }
 
     /**

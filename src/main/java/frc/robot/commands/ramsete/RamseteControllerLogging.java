@@ -25,7 +25,7 @@ public class RamseteControllerLogging extends RamseteController {
     };
 
     // NetworkTable Values
-    private NetworkTableEntry xError, yError, rotError, xCurrent, yCurrent, rotCurrent;  
+    private NetworkTableEntry xError, yError, rotError;
 
     private String m_loggingDataFileName;
     private SimpleCsvLogger usbLogger = new SimpleCsvLogger();

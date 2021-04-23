@@ -6,6 +6,7 @@ package frc.robot.config;
 
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
@@ -24,11 +25,23 @@ public final class Config {
     /** Drivetrain Motor Data */
     public static int LEFT_MASTER = 1;
     public static int RIGHT_MASTER = 2;
+    public static int LEFT_SLAVE = 3;
+    public static int RIGHT_SLAVE = 4;
+
+    public static int PIGEON_ID = 10;
     
-    // INVERSIONS
+    /** Drivetrain inversions */
+    public static boolean INVERT_LEFT_MASTER = false;
+    public static boolean INVERT_RIGHT_MASTER = false;
+    public static boolean INVERT_LEFT_SLAVE = false;
+    public static boolean INVERT_RIGHT_SLAVE = false;
+
+    public static boolean INVERT_LEFT_ENCODER = false;
+    public static boolean INVERT_RIGHT_ENCODER = false;
     public static boolean DRIVETRAIN_INVERT_DIFFERENTIALDRIVE = false;
 
     /** Drivetrain data */
+    public static double RAMSETE_VOLTAGE_COMPENSATION = 12;
     public static double trackWidth = 0.65;
     public static DifferentialDriveKinematics differentialDriveKinematics = new DifferentialDriveKinematics(trackWidth);
     public static double drivetrainWheelDiameter = 0.1524; // 6 inches in meters
@@ -40,9 +53,15 @@ public final class Config {
     public static double kvVoltSecondsPerMeter = 0;
     public static double kaVoltSecondsSquaredPerMeter = 0;
 
-    /** Ramsete Data */
+    /** Generating Trajectories Data */
+    public static double kMaxSpeedMetersPerSecond = 1.0;
+    public static double kMaxAccelerationMetersPerSecondSquared = 1.0;
+
     public static TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Config.ksVolts,
                             Config.kvVoltSecondsPerMeter, Config.kaVoltSecondsSquaredPerMeter), Config.differentialDriveKinematics, 10); 
+
+    public static TrajectoryConfig trajectoryConfig = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
+        .setKinematics(differentialDriveKinematics).addConstraint(autoVoltageConstraint); 
 
     /** Ramsete Logging */
     // Folder for Ramsete's logging data, /U means usb port closest to centre of Robo Rio

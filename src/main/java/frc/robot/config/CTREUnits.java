@@ -4,7 +4,9 @@
 
 package frc.robot.config;
 
-/** Add your docs here. */
+/**
+ * Class to convert between metric units and CTRE units.
+ */
 public class CTREUnits {
     /**
      * Converting Talon ticks to meters
@@ -61,6 +63,6 @@ public class CTREUnits {
      * Unit Conversion Method
      */
     public static double talonVelocityToMetersPerSecond(double talonVelocity) {
-        return talonPosistionToMeters(talonVelocity * 10); // Convert ticks/100ms to ticks/sec
+        return talonPosistionToMeters(talonVelocity * 10); // Convert ticks/100ms to ticks/sec then convert ticks/sec to m/s
     }
 }

@@ -252,14 +252,6 @@ public class DriveBase extends SubsystemBase {
 
         // Make sure motor safety knows the motors are being used
         differentialDrive.feed();
-
-        /**
-         * ArbFF accepts a value from -1 to 1. This is a percentage output to apply. It considers 100% (or a value of 1)
-         * to be the voltage coming into the TalonSRX. So to give the motor the voltage calculated from SimpleMotorFeedforward,
-         * SimpleMotorFeedforward's value is divided by the bus voltage, then the talon multiplies it by the bus voltage.
-         * 
-         * Because it is done this way, it means VoltageCompensation should NOT be on since it will conflict.
-         */
     }
 
 }

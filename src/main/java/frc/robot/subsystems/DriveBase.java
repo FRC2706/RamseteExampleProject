@@ -105,8 +105,6 @@ public class DriveBase extends SubsystemBase {
         talonConfig.slot1.kD = 0;
         talonConfig.slot1.allowableClosedloopError = 0;
 
-        talonConfig.voltageCompSaturation = Config.RAMSETE_VOLTAGE_COMPENSATION;
-
         // Config all talon settings - automatically returns the "worst error"
         ErrorCode leftMasterError = leftMaster.configAllSettings(talonConfig);
         ErrorCode rightMasterError = rightMaster.configAllSettings(talonConfig);
@@ -130,10 +128,6 @@ public class DriveBase extends SubsystemBase {
         // Invert encoders if boolean is true
         leftMaster.setSensorPhase(Config.INVERT_LEFT_ENCODER);
         rightMaster.setSensorPhase(Config.INVERT_RIGHT_ENCODER);
-
-        // Turn on voltage compensation
-        leftMaster.enableVoltageCompensation(true);
-        rightMaster.enableVoltageCompensation(true);
 
     }
 
@@ -251,13 +245,21 @@ public class DriveBase extends SubsystemBase {
 
         // Give the feed forward value and velocity set point to the talons
         leftMaster.set(ControlMode.Velocity, CTREUnits.metersPerSecondToTalonVelocity(leftVelocity),
-                DemandType.ArbitraryFeedForward, leftFeedforward / 12.0);
+                DemandType.ArbitraryFeedForward, leftFeedforward / leftMaster.getBusVoltage()); 
 
         rightMaster.set(ControlMode.Velocity, CTREUnits.metersPerSecondToTalonVelocity(rightVelocity),  
-                DemandType.ArbitraryFeedForward, rightFeedforward / 12.0); 
+                DemandType.ArbitraryFeedForward, rightFeedforward / rightMaster.getBusVoltage()); 
 
         // Make sure motor safety knows the motors are being used
         differentialDrive.feed();
+
+        /**
+         * ArbFF accepts a value from -1 to 1. This is a percentage output to apply. It considers 100% (or a value of 1)
+         * to be the voltage coming into the TalonSRX. So to give the motor the voltage calculated from SimpleMotorFeedforward,
+         * SimpleMotorFeedforward's value is divided by the bus voltage, then the talon multiplies it by the bus voltage.
+         * 
+         * Because it is done this way, it means VoltageCompensation should NOT be on since it will conflict.
+         */
     }
 
 }

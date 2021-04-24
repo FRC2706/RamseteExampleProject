@@ -40,26 +40,50 @@ public final class Config {
     public static boolean INVERT_RIGHT_ENCODER = false;
     public static boolean DRIVETRAIN_INVERT_DIFFERENTIALDRIVE = false;
 
-    /** Drivetrain data */
-    public static double RAMSETE_VOLTAGE_COMPENSATION = 12;
+    /** 
+     * Drivetrain data 
+     */
+
+    // TrackWidth-> Distance between the left and right side of the drivetrain. Crucial in DifferentialDriveKinematics, see below.
     public static double trackWidth = 0.65;
+
+    // Kinematics-> Converts a velocity & angular velocity to left velocity and right velocity. This value can affect how accurate
+    //                  the robot does turns.
     public static DifferentialDriveKinematics differentialDriveKinematics = new DifferentialDriveKinematics(trackWidth);
+
+    // Diameter of wheel & ticksPerRevolution used to convert meters into encoder ticks
     public static double drivetrainWheelDiameter = 0.1524; // 6 inches in meters
     public static double ticksPerRevolution = 4096;
 
-    /** Characterization data */
-    public static double kRamsetePGain = 0;
+    /** 
+     * Characterization data
+     */
+    // ksVolts -> adds +ksVolts or -ksVolts to overcome static friction in the direction of motion.
+    // kvVoltSecondsPerMeter -> Adds the values number of volts for every meter per second of velocity desired.
+    // kaVoltSecondsSquaredPerMeter -> Adds the values number of volts for every meter per second squared of acceleration desired.
     public static double ksVolts = 0;
     public static double kvVoltSecondsPerMeter = 0;
     public static double kaVoltSecondsSquaredPerMeter = 0;
 
-    /** Generating Trajectories Data */
+    // P Gain -> Number of ticks/100ms to apply for every ticks/100ms of error
+    public static double kRamsetePGain = 0;
+
+    /** 
+     * Generating Trajectories Data
+     */
+    // MaxVelocity -> When it plans the trajectories, it will plan to go to the given max velocity.
+    // MaxAcceleration -> When it plans the trajectories, it will ramp up/ramp down by this amount.
+    //                  It will not plan to accelerate faster than this value.
     public static double kMaxSpeedMetersPerSecond = 1.0;
     public static double kMaxAccelerationMetersPerSecondSquared = 1.0;
 
+    // voltageConstraint -> It will use this voltage constraint to make sure that the desired voltage given to a specific motor is achievable.
+    //                          It will not allow any planned trajectory to tell a motor to go more than 10 volts.
+    //                          This number is not 12 volts because it needs room to compensate.
     public static TrajectoryConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(Config.ksVolts,
                             Config.kvVoltSecondsPerMeter, Config.kaVoltSecondsSquaredPerMeter), Config.differentialDriveKinematics, 10); 
 
+    // TrajectoryConfig -> This object holds max velocity, max acceleration, kinematics to make sure those are obeyed and constraints.
     public static TrajectoryConfig trajectoryConfig = new TrajectoryConfig(kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared)
         .setKinematics(differentialDriveKinematics).addConstraint(autoVoltageConstraint); 
 

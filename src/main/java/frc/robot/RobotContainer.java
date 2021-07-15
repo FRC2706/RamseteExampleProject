@@ -7,6 +7,7 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -14,8 +15,11 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AngleTest;
 import frc.robot.commands.ramsete.RamseteCommandMerge;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase;
@@ -45,6 +49,13 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        Joystick driverStick = new Joystick(0); 
+
+        CommandBase test = new AngleTest(() -> driverStick.getRawAxis(0), () -> driverStick.getRawAxis(1));
+
+        new JoystickButton(driverStick, XboxController.Button.kA.value).toggleWhenActive(test);
+        
+
     }
 
     /**

@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.AngleTest;
 import frc.robot.commands.ramsete.RamseteCommandMerge;
 import frc.robot.config.Config;
 import frc.robot.subsystems.DriveBase; 
@@ -51,10 +50,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         Joystick driverStick = new Joystick(0); 
 
-        CommandBase test = new AngleTest(() -> driverStick.getRawAxis(0), () -> driverStick.getRawAxis(1));
-
-        new JoystickButton(driverStick, XboxController.Button.kA.value).toggleWhenActive(test);
-        
 
     }
 

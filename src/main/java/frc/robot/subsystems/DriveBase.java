@@ -254,4 +254,11 @@ public class DriveBase extends SubsystemBase {
         differentialDrive.feed();
     }
 
+    public double getAverageVelocity() {
+        double leftVel = leftMaster.getSelectedSensorVelocity();
+        double rightVel = rightMaster.getSelectedSensorVelocity();
+
+        return CTREUnits.talonVelocityToMetersPerSecond((leftVel+rightVel)/2);
+    }
+
 }

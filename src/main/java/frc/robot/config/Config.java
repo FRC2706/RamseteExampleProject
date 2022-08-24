@@ -52,7 +52,7 @@ public final class Config {
     public static DifferentialDriveKinematics differentialDriveKinematics = new DifferentialDriveKinematics(trackWidth);
 
     // Diameter of wheel & ticksPerRevolution used to convert meters into encoder ticks
-    public static double drivetrainWheelDiameter = 0.1524; // 6 inches in meters
+    public static double drivetrainWheelDiameter = 0.1524; // 6 inches = 0.1524 meters
     public static double ticksPerRevolution = 4096;
 
     /** 

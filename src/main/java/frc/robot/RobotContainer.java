@@ -59,13 +59,27 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // Example trajectory - Drive forward 1 meter
+        // Example trajectory - Drive forward
         Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(List.of(
             new Pose2d(),
-            new Pose2d(1, 0, Rotation2d.fromDegrees(0))),
+            new Pose2d(2.5, 0, Rotation2d.fromDegrees(0))),
             getConfig(0, 0, false));
         RamseteCommandMerge ramsete1 = new RamseteCommandMerge(trajectory1, "ExampleTrajectory-DriveForward");
         
+        // Example trajectory - Drive forward and left
+        Trajectory trajectory2 = TrajectoryGenerator.generateTrajectory(List.of(
+            new Pose2d(),
+            new Pose2d(2.5, 1.5, Rotation2d.fromDegrees(0))),
+            getConfig(0, 0, false));
+        RamseteCommandMerge ramsete2 = new RamseteCommandMerge(trajectory2, "ExampleTrajectory-ForwardAndLeft");
+
+        // Example trajectory - Drive forward and turn left
+        Trajectory trajectory3 = TrajectoryGenerator.generateTrajectory(List.of(
+            new Pose2d(),
+            new Pose2d(2.5, 1.5, Rotation2d.fromDegrees(45))),
+            getConfig(0, 0, false));
+        RamseteCommandMerge ramsete3 = new RamseteCommandMerge(trajectory3, "ExampleTrajectory-ForwardAnd45degLeft");
+
         return new SequentialCommandGroup(
             resetOdometry(trajectory1),
             ramsete1

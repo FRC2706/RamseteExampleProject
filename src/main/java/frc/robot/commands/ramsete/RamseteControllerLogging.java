@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import frc.robot.config.Config;
+import frc.robot.subsystems.DriveBase;
 
 /** Add your docs here. */
 public class RamseteControllerLogging extends RamseteController {
@@ -21,7 +24,9 @@ public class RamseteControllerLogging extends RamseteController {
         "plannedX", "plannedY", "plannedRot",
         "errorX", "errorY", "errorRot",
         "plannedVelocity",
-        "plannedAcceleration"
+        "plannedAcceleration",
+        "desiredLeftVel", "desiredRightVel",
+        "measuredLeftVel", "measuredRightVel"
     };
 
     // NetworkTable Values
@@ -53,7 +58,7 @@ public class RamseteControllerLogging extends RamseteController {
     /**
      * Interjects logging into ramsete
      * 
-     * Adds some code on top of the RamseteController calculate() method to log the values passed into it.
+     * Adds some code on top of the RamseteController calculate() method to log the values passed through it.
      */
     @Override
     public ChassisSpeeds calculate( 
@@ -62,15 +67,21 @@ public class RamseteControllerLogging extends RamseteController {
             double linearVelocityRefMeters,
             double angularVelocityRefRadiansPerSecond) {
 
-        // Error between odometry and desired pose
-        Pose2d poseError = poseRef.relativeTo(currentPose);
-
+        // Do the usual controller calculation that would normally happen
+        ChassisSpeeds controllerCalculation = super.calculate(currentPose, poseRef, linearVelocityRefMeters, angularVelocityRefRadiansPerSecond);
+        
+        // Get the desired left and right speeds to store
+        DifferentialDriveWheelSpeeds leftRightSpeeds = Config.differentialDriveKinematics.toWheelSpeeds(controllerCalculation);
+        
         // Initialize the logger if not done yet
         if (loggerInitialized == false) {
             startLogging();
             loggerInitialized = true;
         }
 
+        // Error between odometry and desired pose
+        Pose2d poseError = poseRef.relativeTo(currentPose);
+        
         // This series of entries must match the string of headings at the top of this file
         usbLogger.writeData(
             Timer.getMatchTime(),
@@ -78,14 +89,18 @@ public class RamseteControllerLogging extends RamseteController {
             poseRef.getX(), poseRef.getY(), poseRef.getRotation().getDegrees(),
             poseError.getX(), poseError.getY(), poseError.getRotation().getDegrees(),
             linearVelocityRefMeters,
-            angularVelocityRefRadiansPerSecond);
+            angularVelocityRefRadiansPerSecond,
+            leftRightSpeeds.leftMetersPerSecond, leftRightSpeeds.rightMetersPerSecond,
+            DriveBase.getInstance().getLeftVelocity(), DriveBase.getInstance().getRightVelocity()            
+        );
 
+        // Update networktables
         xError.setNumber(poseError.getX());
         yError.setNumber(poseError.getY());
         rotError.setNumber(poseError.getRotation().getDegrees());
 
-        // Let ramsete continue on as normal
-        return super.calculate(currentPose, poseRef, linearVelocityRefMeters, angularVelocityRefRadiansPerSecond);
+        // Let ramsete continue on as normal 
+        return controllerCalculation;
     }
 
 

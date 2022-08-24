@@ -214,9 +214,9 @@ public class DriveBase extends SubsystemBase {
     /**
      * Set left and right velocity of the drivetrain
      * 
-     * This method of using SimpleMotorFeedforward and frc-characterization is from the other
-     * constructor of RamseteCommand. Instead of running a PIDController in RamseteCommand, the
-     * PID loop is run on the talon using ControlMode.Velocity. However only a P gain is required
+     * This method of using SimpleMotorFeedforward and frc-characterization is copied from
+     * RamseteCommand {@link RamseteCommand}. However, instead of running a PIDController in RamseteCommand, 
+     * the PID loop is run on the talon using ControlMode.Velocity. Only a P gain is required
      * since it only has to compensate for any error in SimpleMotorFeedforward.
      * 
      * See writeup on frc-characterization for more info on that equation and how to characterize.
@@ -252,6 +252,14 @@ public class DriveBase extends SubsystemBase {
 
         // Make sure motor safety knows the motors are being used
         differentialDrive.feed();
+    }
+
+    public double getLeftVelocity() {
+        return CTREUnits.talonVelocityToMetersPerSecond(leftMaster.getSelectedSensorVelocity());
+    }
+
+    public double getRightVelocity() {
+        return CTREUnits.talonVelocityToMetersPerSecond(rightMaster.getSelectedSensorVelocity());
     }
 
 }
